@@ -69,12 +69,24 @@ function App() {
         {error && <p className="text-red-500 mt-2">{error}</p>}
         {/* Weather Info Section */}
         {weather && (
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md flex flex-col items-start">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md flex flex-col items-center">
             {/* City and Country */}
-            <div className="flex items-center mb-2">
-              <h2 className="text-2xl font-bold mr-2">
-                {weather.name}, {weather.sys.country}
-              </h2>
+            <div className="flex flex-row items-center mb-2">
+              <div className="mb-2 ">
+                <p className="text-md text-gray-400">
+                  {new Date().toLocaleString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </p>{" "}
+                {/* Example Output: "Mar 20, 01:03 PM" */}
+                <h2 className="text-2xl font-bold">
+                  {weather.name}, {weather.sys.country}
+                </h2>
+              </div>
               {/* Weather Icon */}
               <img
                 src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
@@ -83,38 +95,49 @@ function App() {
               />
             </div>
             {/* Weather Details */}
-            <p className="text-lg">🌡Temperature: {weather.main.temp}°C</p>
-            <p className="text-lg">
-              🌡Temp feels like: {weather.main.feels_like}°C
-            </p>
-            <p className="text-lg">
-              ⛅ Condition:{weather.weather[0].main},
-              {weather.weather[0].description}
-            </p>
-            <p className="text-lg">
-              💨 Wind: {weather.wind.speed} m/s (
-              {(weather.wind.speed * 3.6).toFixed(1)} km/h) -{" "}
-              {getWindDescription(weather.wind.speed)}
-            </p>
-            <p className="text-lg">🥵 Humidity: {weather.main.humidity}%</p>
-            <p className="text-lg">
-              🌫️ Air Pressure: {weather.main.pressure} hPa
-            </p>
-            <p className="text-lg">⛅ Cloudiness: {weather.clouds.all}%</p>
-            <p className="text-lg">
-              🌧 Rain:{" "}
-              {weather.rain?.["1h"] ? `${weather.rain["1h"]} mm` : "No rain"}{" "}
-            </p>
-            <p className="text-lg">
-              ❄ Snow:{" "}
-              {weather.snow?.["1h"] ? `${weather.snow["1h"]} mm` : "No snow"}{" "}
-            </p>
-            <p className="text-lg">
-              🌄 Sunrise: {formatTime(weather.sys.sunrise)}
-            </p>
-            <p className="text-lg">
-              🌆 Sunset: {formatTime(weather.sys.sunset)}
-            </p>
+            <div className="grid grid-cols-2 gap-4 text-lg">
+              <p>
+                🌡 <strong>Temp:</strong> {weather.main.temp}°C
+              </p>
+              <p>
+                🥵 <strong>Feels Like:</strong> {weather.main.feels_like}°C
+              </p>
+              <p>
+                ⛅ <strong>Condition:</strong> {weather.weather[0].main}
+              </p>
+              <p>
+                💨 <strong>Wind:</strong> {weather.wind.speed} m/s (
+                {(weather.wind.speed * 3.6).toFixed(1)} km/h) -{" "}
+                {getWindDescription(weather.wind.speed)}
+              </p>
+              <p>
+                🌫 <strong>Cloudiness:</strong> {weather.clouds.all}%
+              </p>
+              <p>
+                🥵 <strong>Humidity:</strong> {weather.main.humidity}%
+              </p>
+              <p>
+                🌡 <strong>Pressure:</strong> {weather.main.pressure} hPa
+              </p>
+              <p>
+                🚗 <strong>Visibility:</strong>{" "}
+                {(weather.visibility / 1000).toFixed(1)} km
+              </p>
+              <p>
+                🌧 <strong>Rain:</strong>{" "}
+                {weather.rain?.["1h"] ? `${weather.rain["1h"]} mm` : "No rain"}
+              </p>
+              <p>
+                ❄ <strong>Snow:</strong>{" "}
+                {weather.snow?.["1h"] ? `${weather.snow["1h"]} mm` : "No snow"}
+              </p>
+              <p>
+                🌄 <strong>Sunrise:</strong> {formatTime(weather.sys.sunrise)}
+              </p>
+              <p>
+                🌆 <strong>Sunset:</strong> {formatTime(weather.sys.sunset)}
+              </p>
+            </div>
           </div>
         )}
       </div>
