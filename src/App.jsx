@@ -1,16 +1,32 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 function App() {
   const [city, setCity] = useState("Hyderabad");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState("");
 
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
   const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
   useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
     fetchWeather();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
@@ -45,18 +61,26 @@ function App() {
   };
   return (
     <>
-      <div className="min-h-screen bg-gray-900 text-white p-4">
+      <div className="min-h-screen bg-gray-900 text-white p-4 dark:bg-gray-100 dark:text-black">
         {/* Heading at the top */}
         <header className="text-center py-6">
           <h1 className="text-3xl font-bold">Weather App</h1>
         </header>
+
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="absolute top-4 right-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
+        </button>
+
         {/* Input and Button */}
         <div className="flex flex-col items-center mt-6">
           <div className="flex gap-2 mb-6">
             <input
               type="text"
               placeholder="Enter city"
-              className="p-2 rounded-md text-black w-96 "
+              className="p-2 rounded-md text-black w-96 shadow-md"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
@@ -73,7 +97,13 @@ function App() {
         {error && <p className="text-red-500 mt-2">{error}</p>}
         {/* Weather Info Section */}
         {weather && (
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md flex flex-col items-center">
+          <motion.div
+            className="bg-gray-800 dark:bg-gray-100 dark:text-black p-6 rounded-lg shadow-lg flex flex-col items-center"
+            key={weather.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             {/* City and Country */}
             <div className="flex flex-row items-center mb-2">
               <div className="mb-2 ">
@@ -142,7 +172,7 @@ function App() {
                 🌆 <strong>Sunset:</strong> {formatTime(weather.sys.sunset)}
               </p>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </>
