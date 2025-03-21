@@ -1,21 +1,25 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Hyderabad");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState("");
+
+  const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+
+  useEffect(() => {
+    fetchWeather();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
 
   const fetchWeather = async () => {
     if (!city) return;
 
-    const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-    // const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
-
     try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`
-      );
+      const response = await axios.get(url);
       setWeather(response.data);
       setError("");
     } catch (error) {
@@ -91,7 +95,7 @@ function App() {
               <img
                 src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
                 alt="weather icon"
-                className="w-12 h-12"
+                className="w-12 h-12 mt-4"
               />
             </div>
             {/* Weather Details */}
