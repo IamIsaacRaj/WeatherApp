@@ -98,7 +98,7 @@ function App() {
         {/* Weather Info Section */}
         {weather && (
           <motion.div
-            className="bg-gray-800 dark:bg-gray-100 dark:text-black p-6 rounded-lg shadow-lg flex flex-col items-center"
+            className="bg-gray-800 dark:bg-gray-100 dark:text-black p-6 rounded-lg shadow-lg flex flex-col items-center transition-all duration-200"
             key={weather.name}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
